@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkyFlow // Weather App</title>
+    
+    <!-- Google Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+
+    <style>
+        :root {
+            --bg-body: #0b0f19;
+            --gradient-left: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-card: rgba(255, 255, 255, 0.06);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --text-main: #ffffff;
+            --text-accent: #00f2fe;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            background-image: radial-gradient(at 0% 0%, rgba(79, 172, 254, 0.1) 0, transparent 50%), 
+                              radial-gradient(at 100% 100%, rgba(0, 242, 254, 0.08) 0, transparent 50%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .weather-container {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            width: 750px;
+            height: 460px;
+            border-radius: 30px;
+            display: flex;
+            overflow: hidden;
+            box-shadow: 0 25px 45px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Left Panel - Hero Section */
+        .weather-side {
+            position: relative;
+            width: 42%;
+            height: 100%;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            color: var(--text-main);
+            background: var(--gradient-left);
+            box-shadow: 5px 0 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .date-container .day-text {
+            font-size: 2rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        .date-container .date-text {
+            font-size: 0.95rem;
+            opacity: 0.85;
+            display: block;
+            margin-top: 2px;
+        }
+
+        .date-container .location {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 12px;
+            font-size: 0.95rem;
+            background: rgba(0, 0, 0, 0.15);
+            padding: 4px 12px;
+            border-radius: 20px;
+            width: fit-content;
+        }
+
+        .weather-container-main .weather-icon {
+            font-size: 4.5rem;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+
+        .weather-container-main .weather-temp {
+            font-size: 3.8rem;
+            font-weight: 600;
+            line-height: 1.1;
+        }
+
+        .weather-container-main .weather-desc {
+            font-size: 1.1rem;
+            font-weight: 500;
+            letter-spacing: 1px;
+            opacity: 0.9;
+        }
+
+        /* Right Panel - Info Section */
+        .info-side {
+            width: 58%;
+            height: 100%;
+            padding: 40px 35px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            color: var(--text-main);
+        }
+
+        .search-container {
+            display: flex;
+            gap: 12px;
+        }
+
+        .search-container input {
+            flex: 1;
+            background: var(--glass-card);
+            border: 1px solid var(--glass-border);
+            padding: 14px 22px;
+            border-radius: 50px;
+            color: var(--text-main);
+            font-size: 0.95rem;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .search-container input:focus {
+            border-color: var(--text-accent);
+            box-shadow: 0 0 15px rgba(0, 242, 254, 0.2);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .search-container button {
+            background: var(--text-accent);
+            border: none;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 242, 254, 0.3);
+        }
+
+        .search-container button span {
+            color: #0b0f19;
+            font-weight: bold;
+        }
+
+        .search-container button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(0, 242, 254, 0.5);
+        }
+
+        .details-container {
+            background: var(--glass-card);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .detail-inline {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .detail-inline:last-child {
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+
+        .detail-inline .title {
+            font-weight: 500;
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.6);
+            letter-spacing: 0.5px;
+        }
+
+        .detail-inline .value {
+            font-weight: 600;
+            font-size: 1.05rem;
+            color: var(--text-main);
+        }
+
+        @media (max-width: 768px) {
+            .weather-container {
+                width: 90%;
+                height: auto;
+                flex-direction: column;
+                border-radius: 24px;
+            }
+            .weather-side, .info-side {
+                width: 100%;
+            }
+            .weather-side {
+                height: 280px;
+                border-radius: 24px 24px 0 0;
+            }
+            .info-side {
+                gap: 35px;
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="weather-container">
+        <!-- Left Panel -->
+        <div class="weather-side">
+            <div class="date-container">
+                <h2 class="day-text" id="current-day">Loading...</h2>
+                <span class="date-text" id="current-date">-- --- ----</span>
+                <span class="location">
+                    <span class="material-symbols-outlined" style="font-size: 18px;">location_on</span> 
+                    <span id="city-name">City, Country</span>
+                </span>
+            </div>
+            <div class="weather-container-main">
+                <span class="material-symbols-outlined weather-icon" id="main-icon">cloud</span>
+                <h1 class="weather-temp" id="main-temp">--°C</h1>
+                <h3 class="weather-desc" id="weather-desc">CONDITION</h3>
+            </div>
+        </div>
+
+        <!-- Right Panel -->
+        <div class="info-side">
+            <div class="search-container">
+                <input type="text" id="search-input" placeholder="Enter city name..." autocomplete="off">
+                <button id="search-btn"><span class="material-symbols-outlined">search</span></button>
+            </div>
+
+            <div class="details-container">
+                <div class="detail-inline">
+                    <span class="title">HUMIDITY</span>
+                    <span class="value" id="humidity-val">-- %</span>
+                </div>
+                <div class="detail-inline">
+                    <span class="title">WIND SPEED</span>
+                    <span class="value" id="wind-val">-- km/h</span>
+                </div>
+                <div class="detail-inline">
+                    <span class="title">VISIBILITY</span>
+                    <span class="value" id="visibility-val">-- km</span>
+                </div>
+                <div class="detail-inline">
+                    <span class="title">PRESSURE</span>
+                    <span class="value" id="pressure-val">-- hPa</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Section -->
+    <script>
+        // 🛠️ अपनी 32-अक्षरों की OpenWeatherMap API Key यहाँ सिंगल कोट्स के बीच पेस्ट करें:
+        const apiKey = 'YOUR_API_KEY_HERE'; 
+
+        const searchInput = document.getElementById('search-input');
+        const searchBtn = document.getElementById('search-btn');
+        const mainTemp = document.getElementById('main-temp');
+        const weatherDesc = document.getElementById('weather-desc');
+        const cityNameElement = document.getElementById('city-name');
+        const humidityVal = document.getElementById('humidity-val');
+        const windVal = document.getElementById('wind-val');
+        const visibilityVal = document.getElementById('visibility-val');
+        const pressureVal = document.getElementById('pressure-val');
+        const mainIcon = document.getElementById('main-icon');
+
+        // सिस्टम टाइम और डेट सेट करना
+        const today = new Date();
+        document.getElementById('current-day').textContent = today.toLocaleDateString('en-US', { weekday: 'long' });
+        document.getElementById('current-date').textContent = today.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+
+        // वेदर डेटा फ़ेच करने का फंक्शन
+        async function checkWeather(city) {
+            const cleanCity = city.trim();
+            if (!cleanCity) return;
+            
+            // अगर API Key चेंज नहीं की गई है, तो एरर देने के बजाय डमी डेटा लोड कर देगा
+            if (apiKey === 'YOUR_API_KEY_HERE' || apiKey === '') {
+                showDemoData(cleanCity);
+                return;
+            }
+            
+            const url = `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(cleanCity)}&appid=${apiKey}&units=metric`;
+            
+            try {
+                const response = await fetch(url);
+                
+                if (!response.ok) {
+                    if(response.status === 401) {
+                        alert("API Key invalid या एक्टिवेट नहीं हुई है! कोड में अपनी सही Key डालें।");
+                        showDemoData(cleanCity); // फॉलबैक ताकि लेआउट दिखे
+                    } else {
+                        alert("City नहीं मिली! कृपया स्पेलिंग चेक करें।");
+                    }
+                    return;
+                }
+                
+                const data = await response.json();
+                updateUI(data.name, data.sys.country, data.main.temp, data.weather[0].description, data.main.humidity, data.wind.speed, (data.visibility / 1000), data.main.pressure, data.weather[0].main);
+
+            } catch (error) {
+                console.error("Error:", error);
+                showDemoData(cleanCity);
+            }
+        }
+
+        // UI अपडेट करने का कॉमन फंक्शन
+        function updateUI(city, country, temp, desc, humidity, wind, visibility, pressure, condition) {
+            cityNameElement.textContent = `${city}, ${country}`;
+            mainTemp.textContent = `${Math.round(temp)}°C`;
+            weatherDesc.textContent = desc.toUpperCase();
+            humidityVal.textContent = `${humidity} %`;
+            windVal.textContent = `${wind} km/h`;
+            visibilityVal.textContent = `${visibility.toFixed(1)} km`;
+            pressureVal.textContent = `${pressure} hPa`;
+            updateWeatherIcon(condition);
+        }
+
+        // डमी डेटा जनरेटर (अगर API की काम न करे)
+        function showDemoData(city) {
+            console.warn("Using demo data because API Key is not set/active.");
+            updateUI(city, "IN", 28, "Scattered Clouds (Demo)", 64, 12, 10.0, 1012, "Clouds");
+        }
+
+        // कंडीशन के हिसाब से मैटेरियल आइकॉन बदलना
+        function updateWeatherIcon(condition) {
+            switch (condition.toLowerCase()) {
+                case 'clouds': mainIcon.textContent = 'cloud'; break;
+                case 'clear': mainIcon.textContent = 'wb_sunny'; break;
+                case 'rain':
+                case 'drizzle': mainIcon.textContent = 'rainy'; break;
+                case 'thunderstorm': mainIcon.textContent = 'thunderstorm'; break;
+                case 'snow': mainIcon.textContent = 'ac_unit'; break;
+                case 'mist':
+                case 'smoke':
+                case 'haze': mainIcon.textContent = 'foggy'; break;
+                default: mainIcon.textContent = 'device_thermostat';
+            }
+        }
+
+        // क्लिक और एंटर की-प्रेस इवेंट्स Listener
+        searchBtn.addEventListener('click', () => checkWeather(searchInput.value));
+        searchInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') checkWeather(searchInput.value);
+        });
+
+        // पहली बार ओपन होने पर डिफ़ॉल्ट सिटी लोड होना
+        checkWeather('Delhi');
+    </script>
+</body>
+</html>
